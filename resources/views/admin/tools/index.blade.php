@@ -8,6 +8,11 @@
             @if(session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
+
+            <a href="{{ route('tools.create') }}" class="btn btn-primary mb-3">
+                <i class="fas fa-plus"></i> Add New Tools
+            </a>
+
             <table class="table table-hover table-bordered text-center">
                 <thead>
                     <tr>
@@ -23,9 +28,17 @@
                         <td>{{ $item->name }}</td>
                         <td>
                             <a href="{{ route('tools.edit', $item->id) }}" class="btn btn-sm btn-warning">
-                                <i class="fas fa-edit"></i> Edit
+                             Edit
                             </a>
-                        </td>
+
+                            <form action="{{ route('tools.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus pengalaman ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                        </form>
+                            </td>
                     </tr>
                     @empty
                     <tr><td colspan="3">Belum ada data tools.</td></tr>

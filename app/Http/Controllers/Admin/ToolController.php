@@ -14,6 +14,11 @@ class ToolController extends Controller
         return view('admin.tools.index', compact('tools'));
     }
 
+     public function create()
+{
+    return view('admin.tools.create');
+}
+
     public function edit($id)
     {
         $tool = Tool::findOrFail($id);
@@ -32,4 +37,23 @@ class ToolController extends Controller
 
         return redirect()->route('tools.index')->with('success', 'Tool berhasil diperbarui!');
     }
+
+    public function store(Request $request) {
+    $request->validate(['name' => 'required']);
+    
+    $about = \App\Models\AboutSection::first();
+
+    \App\Models\Tool::create([
+        'about_id' => $about->id,
+        'name' => $request->name
+    ]);
+
+    return redirect()->route('tools.index')->with('success', 'Tool added!');
 }
+
+public function destroy($id) {
+    \App\Models\Tool::findOrFail($id)->delete();
+    return redirect()->route('tools.index')->with('success', 'Tool deleted!');
+}
+}
+

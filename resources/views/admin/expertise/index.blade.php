@@ -15,6 +15,10 @@
                     </button>
                 </div>
             @endif
+
+            <a href="{{ route('expertise.create') }}" class="btn btn-primary mb-3">
+                <i class="fas fa-plus"></i> Add New Expertise
+            </a>
             
             <table class="table table-hover table-bordered">
                 <thead>
@@ -32,9 +36,17 @@
                         <td>{{ $item->name }}</td>
                         <td class="text-center">
                             <a href="{{ route('expertise.edit', $item->id) }}" class="btn btn-sm btn-warning">
-                                <i class="fas fa-edit"></i> Edit
+                            Edit
                             </a>
-                        </td>
+
+                            <form action="{{ route('expertise.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus kemampuan ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                        </form>
+                            </td>
                     </tr>
                     @empty
                     <tr>

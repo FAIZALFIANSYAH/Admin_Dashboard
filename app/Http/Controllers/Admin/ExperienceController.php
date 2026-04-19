@@ -14,6 +14,11 @@ class ExperienceController extends Controller
         return view('admin.experience.index', compact('experiences'));
     }
 
+      public function create()
+{
+    return view('admin.experience.create');
+}
+
     public function edit($id)
     {
         $experience = Experience::findOrFail($id);
@@ -33,4 +38,26 @@ class ExperienceController extends Controller
 
         return redirect()->route('experience.index')->with('success', 'Career Narrative berhasil diperbarui!');
     }
+
+    public function store(Request $request)
+{
+    $data = $request->validate([
+        'position' => 'required',
+        'company_name' => 'required',
+        'location' => 'required',
+        'start_year' => 'required',
+        'end_year' => 'nullable',
+        'is_current' => 'boolean',
+        'description' => 'required'
+    ]);
+
+    \App\Models\Experience::create($data);
+    return redirect()->route('experience.index')->with('success', 'Experience added.');
+}
+
+public function destroy($id)
+{
+    \App\Models\Experience::findOrFail($id)->delete();
+    return redirect()->route('experience.index')->with('success', 'Experience deleted.');
+}
 }

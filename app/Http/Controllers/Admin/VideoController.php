@@ -55,4 +55,54 @@ class VideoController extends Controller
 
         return redirect()->route('video.index')->with('success', 'Video dan Thumbnail berhasil diupdate!');
     }
+
+// 1. Menampilkan halaman form tambah
+public function create()
+{
+    return view('admin.video.create');
+}
+
+// 2. Memproses penyimpanan data ke database & file ke storage
+public function store(Request $request)
+{
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        'video' => 'required|mimes:mp4,mov,ogg|max:102400', // Max 100MB sesuai php.ini kita
+    ]);
+
+    $data = $request->all();
+
+    // Upload Thumbnail jika ada
+    if ($request->hasFile('thumbnail')) {
+        $data['thumbnail_url'] = $request->file('thumbnail')->store('video_thumbnails', 'public');
+    }
+
+    // Upload Video (Wajib)
+    if ($request->hasFile('video')) {
+        $data['video_url'] = $request->file('video')->store('videos', 'public');
+    }
+
+    \App\Models\Video::create($data);
+
+    return redirect()->route('video.index')->with('success', 'Video berhasil ditambahkan!');
+}
+
+// 3. Menghapus data dan file fisiknya
+public function destroy($id)
+{
+    $video = \App\Models\Video::findOrFail($id);
+
+    // Hapus file dari storage agar tidak memenuhi disk
+    if ($video->thumbnail_url) {
+        Storage::disk('public')->delete($video->thumbnail_url);
+    }
+    if ($video->video_url) {
+        Storage::disk('public')->delete($video->video_url);
+    }
+
+    $video->delete();
+
+    return redirect()->route('video.index')->with('success', 'Video berhasil dihapus!');
+}
 }

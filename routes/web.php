@@ -11,7 +11,7 @@ use App\Http\Controllers\Admin\ExperienceController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\VideoController;
 use App\Http\Controllers\Admin\ContactController;
- 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -23,6 +23,7 @@ Route::resource('products', ProductController::class);
 Route::get('/admin/hero', [HeroController::class, 'index'])->name('hero.index');
 Route::get('/admin/hero/{id}/edit', [HeroController::class, 'edit'])->name('hero.edit');
 Route::put('/admin/hero/{id}', [HeroController::class, 'update'])->name('hero.update');
+Route::delete('/admin/hero/delete-image/{id}', [HeroController::class, 'deleteImage'])->name('hero.deleteImage');
 
 Route::get('/admin/about', [AboutController::class, 'index'])->name('about.index');
 Route::get('/admin/about/{id}/edit', [AboutController::class, 'edit'])->name('about.edit');
