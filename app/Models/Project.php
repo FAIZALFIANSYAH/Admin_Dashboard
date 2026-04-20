@@ -15,10 +15,10 @@ class Project extends Model
     }
 
     // Menambahkan domain ke URL thumbnail secara otomatis
-    protected function thumbnail(): Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => $value ? asset('storage/' . $value) : null,
-        );
-    }
+    // protected function thumbnail(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn($value) => $value ? asset('storage/' . $value) : null,
+    //     );
+    // }
 }

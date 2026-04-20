@@ -36,7 +36,8 @@
 
                             {{-- 2. Jika ada, baru cek apakah dia punya file gambar --}}
                             @if($hero->image_url)
-                            <img src="{{ asset('storage/' . $hero->image_url) }}" width="200" class="img-thumbnail d-block mb-2">
+                            {{-- Menggunakan Storage::url lebih aman daripada asset('storage/...') --}}
+                            <img src="{{ \Illuminate\Support\Facades\Storage::url($hero->image_url) }}" width="200" class="img-thumbnail d-block mb-2">
 
                             <form action="{{ route('hero.deleteImage', $hero->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menyembunyikan gambar ini?')">
                                 @csrf
