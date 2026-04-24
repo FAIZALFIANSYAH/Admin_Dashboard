@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+@can('about')
 <div class="container-fluid pt-4">
     <div class="card">
         <div class="card-header"><h3>About Me Management</h3></div>
@@ -12,4 +13,5 @@
         </div>
     </div>
 </div>
+@endcan
 @endsection

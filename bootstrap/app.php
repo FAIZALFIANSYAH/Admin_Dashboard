@@ -12,6 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->alias([
+            'role' => \App\Http\Middleware\EnsureUserHasRole::class,
+            'permission' => \App\Http\Middleware\EnsureUserHasPermission::class,
+        ]);
+
         $middleware->statefulApi(); // Penting untuk API agar mengenali session/domain
         $middleware->validateCsrfTokens(except: [
             'api/*', // Mengecualikan API dari proteksi CSRF standar agar Next.js bisa akses

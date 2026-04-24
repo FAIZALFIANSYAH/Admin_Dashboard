@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+@can('products')
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -51,4 +52,5 @@
         </div>
     </div>
 </section>
+@endcan
 @endsection

@@ -2,14 +2,14 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\HeroSection;
 use App\Models\AboutSection;
-use App\Models\Experience;
-use App\Models\Project;
-use App\Models\Video;
 use App\Models\Contact;
+use App\Models\Experience;
+use App\Models\HeroSection;
+use App\Models\Project;
 use App\Models\SocialLink;
+use App\Models\Video;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 class PortfolioSeeder extends Seeder
@@ -17,7 +17,7 @@ class PortfolioSeeder extends Seeder
     public function run(): void
     {
         // 1. Hero Section
-        HeroSection::create([
+        HeroSection::firstOrCreate([], [
             'badge' => 'Available for Work',
             'headline' => 'RPL Boys & From Jenpo.',
             'subheadline' => 'Focus internship.',
@@ -27,52 +27,58 @@ class PortfolioSeeder extends Seeder
         ]);
 
         // 2. About Section
-        $about = AboutSection::create([
+        $about = AboutSection::firstOrCreate([], [
             'description' => "I'm currently focused on running the PKL away in Caruban cheerful."
         ]);
 
-        $about->expertises()->createMany([
-            ['name' => 'Backend Development'],
-            ['name' => 'UI/UX Design'],
-            ['name' => 'Projects Documentation'],
-        ]);
+        foreach (['Backend Development', 'UI/UX Design', 'Projects Documentation'] as $expertise) {
+            $about->expertises()->firstOrCreate(['name' => $expertise]);
+        }
 
-        $about->tools()->createMany([
-            ['name' => 'Laravel & Vscode'],
-            ['name' => 'Tailwind & Modern CSS'],
-            ['name' => 'Github'],
-        ]);
+        foreach (['Laravel & Vscode', 'Tailwind & Modern CSS', 'Github'] as $tool) {
+            $about->tools()->firstOrCreate(['name' => $tool]);
+        }
 
         // 3. Experiences
-        Experience::create([
-            'position' => 'Learn C++ Language and Logic Programming',
-            'company_name' => 'Lower Lab RPL, Jenpo',
-            'location' => 'Jenpo',
-            'start_year' => '2024',
-            'end_year' => '2025',
-            'is_current' => false,
-            'description' => 'Building a robust foundation in programming logic through data structures.'
-        ]);
+        $experiences = [
+            [
+                'position' => 'Learn C++ Language and Logic Programming',
+                'company_name' => 'Lower Lab RPL, Jenpo',
+                'location' => 'Jenpo',
+                'start_year' => '2024',
+                'end_year' => '2025',
+                'is_current' => false,
+                'description' => 'Building a robust foundation in programming logic through data structures.'
+            ],
+            [
+                'position' => 'Learn Backend with Node.js and React with Vue.js',
+                'company_name' => 'Upper Lab RPL, Jenpo',
+                'location' => 'Jenpo',
+                'start_year' => '2025',
+                'end_year' => '2026',
+                'is_current' => false,
+                'description' => 'Developing dynamic web applications with complex API integrations.'
+            ],
+            [
+                'position' => 'Learn Laravel',
+                'company_name' => 'Vexa Game',
+                'location' => 'Caruban',
+                'start_year' => '2026',
+                'end_year' => 'Present',
+                'is_current' => true,
+                'description' => 'Implementing MVC architecture to build secure database management systems.'
+            ],
+        ];
 
-        Experience::create([
-            'position' => 'Learn Backend with Node.js and React with Vue.js',
-            'company_name' => 'Upper Lab RPL, Jenpo',
-            'location' => 'Jenpo',
-            'start_year' => '2025',
-            'end_year' => '2026',
-            'is_current' => false,
-            'description' => 'Developing dynamic web applications with complex API integrations.'
-        ]);
-
-        Experience::create([
-            'position' => 'Learn Laravel',
-            'company_name' => 'Vexa Game',
-            'location' => 'Caruban',
-            'start_year' => '2026',
-            'end_year' => 'Present',
-            'is_current' => true,
-            'description' => 'Implementing MVC architecture to build secure database management systems.'
-        ]);
+        foreach ($experiences as $experience) {
+            Experience::firstOrCreate(
+                [
+                    'position' => $experience['position'],
+                    'company_name' => $experience['company_name'],
+                ],
+                $experience
+            );
+        }
 
         // 4. Projects (Path disesuaikan ke projects/thumbnails/)
         $projects = [
@@ -99,29 +105,34 @@ class PortfolioSeeder extends Seeder
         ];
 
         foreach ($projects as $proj) {
-            Project::create([
-                'title' => $proj['title'],
-                'slug' => Str::slug($proj['title']) . '-' . Str::random(5),
-                'category' => $proj['category'],
-                'year' => '2026',
-                'thumbnail' => $proj['thumbnail'],
-                'description' => 'Full branding project for ' . $proj['title']
-            ]);
+            Project::firstOrCreate(
+                ['title' => $proj['title']],
+                [
+                    'slug' => Str::slug($proj['title']) . '-' . Str::random(5),
+                    'category' => $proj['category'],
+                    'year' => '2026',
+                    'thumbnail' => $proj['thumbnail'],
+                    'description' => 'Full branding project for ' . $proj['title']
+                ]
+            );
         }
 
         // 5. Videos (Path disesuaikan ke videos/)
-        Video::create([
-            'title' => 'STMJ Day',
-            'video_url' => 'videos/stmjDay\'s.mp4',
-        ]);
+        Video::firstOrCreate(
+            ['title' => 'STMJ Day'],
+            ['video_url' => 'videos/stmjDay\'s.mp4']
+        );
 
-        Video::create([
-            'title' => 'Flare STMJ',
-            'video_url' => 'videos/flareSTMJ.mp4',
-        ]);
+        Video::firstOrCreate(
+            ['title' => 'Flare STMJ'],
+            ['video_url' => 'videos/flareSTMJ.mp4']
+        );
 
         // 6. Contact & Social
-        Contact::create(['email' => 'muhfaiza@gmail.com']);
-        SocialLink::create(['platform' => 'Instagram', 'url' => 'https://instagram.com/softwareboys61']);
+        Contact::firstOrCreate([], ['email' => 'muhfaiza@gmail.com']);
+        SocialLink::firstOrCreate(
+            ['platform' => 'Instagram'],
+            ['url' => 'https://instagram.com/softwareboys61']
+        );
     }
 }

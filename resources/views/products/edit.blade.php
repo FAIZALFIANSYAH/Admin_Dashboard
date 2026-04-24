@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+@can('products')
 <section class="content">
     <div class="card card-warning">
         <div class="card-header">
@@ -55,4 +56,5 @@
         </form>
     </div>
 </section>
+@endcan
 @endsection

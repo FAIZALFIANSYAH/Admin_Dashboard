@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+@can('contact')
 <div class="container-fluid pt-4">
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -57,4 +58,5 @@
         </div>
     </div>
 </div>
+@endcan
 @endsection

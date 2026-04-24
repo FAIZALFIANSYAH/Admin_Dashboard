@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+@can('expertise')
 <div class="container-fluid pt-4">
     <div class="row">
         <div class="col-md-6">
@@ -37,4 +38,5 @@
         </div>
     </div>
 </div>
+@endcan
 @endsection

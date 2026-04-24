@@ -10,6 +10,7 @@
       <a class="nav-link" data-toggle="dropdown" href="#">
         <i class="far fa-user-circle mr-1"></i>
         <span class="font-weight-bold">{{ Auth::user()->name }}</span>
+        <span class="badge badge-secondary ml-1">{{ Auth::user()->roleLabel() }}</span>
       </a>
       <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
         <span class="dropdown-item dropdown-header">Account Settings</span>

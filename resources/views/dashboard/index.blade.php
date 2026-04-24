@@ -1,139 +1,280 @@
 @extends('layouts.app')
 
 @section('content')
+@can('dashboard')
 <div class="content-header">
-  <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col-sm-6">
-        <h1 class="m-0">Dashboard</h1>
-      </div><div class="col-sm-6">
-        <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="#">Home</a></li>
-          <li class="breadcrumb-item active">Dashboard v1</li>
-        </ol>
-      </div></div></div></div>
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Dashboard</h1>
+                <p class="text-muted mb-0">Ringkasan data portfolio yang tersimpan di panel admin.</p>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="{{ route('Dashboard.index') }}">Home</a></li>
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
 <section class="content">
-  <div class="container-fluid">
-    <div class="row">
-      @foreach($stat as $item)
-      <div class="col-lg-3 col-6">
-        <div class="small-box bg-{{ $item->color }}">
-          <div class="inner">
-            <h3>{{ $item->value }}</h3>
-            <p>{{ $item->label }}</p>
-          </div>
-          <div class="icon">
-            <i class="fas fa-{{ $item->icon }}"></i>
-          </div>
-          <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
-      </div>
-      @endforeach
-    </div>
-    <div class="row">
-      <section class="col-lg-7 connectedSortable">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">
-              <i class="fas fa-chart-pie mr-1"></i>
-              Sales
-            </h3>
-            <div class="card-tools">
-              <ul class="nav nav-pills ml-auto">
-                <li class="nav-item">
-                  <a class="nav-link active" href="#revenue-chart" data-toggle="tab">Area</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#sales-chart" data-toggle="tab">Donut</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="tab-content p-0">
-              <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 300px;">
-                  <canvas id="revenue-chart-canvas" height="300" style="height: 300px;"></canvas>
-               </div>
-              <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;">
-    <canvas id="sales-chart-canvas" height="300" style="height: 300px;"></canvas>
-</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card direct-chat direct-chat-primary">
-          <div class="card-header">
-            <h3 class="card-title">Direct Chat</h3>
-            <div class="card-tools">
-              <span title="3 New Messages" class="badge badge-primary">3</span>
-              <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-minus"></i>
-              </button>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="direct-chat-messages">
-              <div class="direct-chat-msg">
-                <div class="direct-chat-infos clearfix">
-                  <span class="direct-chat-name float-left">Alexander Pierce</span>
-                  <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
+    <div class="container-fluid">
+        <div class="row">
+            @forelse($stats as $item)
+                <div class="col-lg-4 col-md-6">
+                    <div class="small-box bg-{{ $item['color'] }}">
+                        <div class="inner">
+                            <h3>{{ $item['value'] }}</h3>
+                            <p>{{ $item['label'] }}</p>
+                            <small>{{ $item['help'] }}</small>
+                        </div>
+                        <div class="icon">
+                            <i class="fas {{ $item['icon'] }}"></i>
+                        </div>
+                        <a href="{{ $item['route'] }}" class="small-box-footer">
+                            Buka halaman <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
                 </div>
-                <img class="direct-chat-img" src="{{ asset('adminlte/dist/img/user1-128x128.jpg') }}" alt="message user image">
-                <div class="direct-chat-text">Is this template really for free?</div>
-              </div>
+            @empty
+                <div class="col-12">
+                    <div class="alert alert-warning">Belum ada ringkasan yang bisa ditampilkan untuk permission akun ini.</div>
+                </div>
+            @endforelse
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-clipboard-check mr-1"></i>
+                            Status Konten Utama
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach($contentHealth as $item)
+                                <div class="{{ count($contentHealth) === 1 ? 'col-md-12' : 'col-md-4' }}">
+                                    <div class="border rounded p-3 h-100">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="mb-0">{{ $item['title'] }}</h5>
+                                            <span class="badge badge-{{ $item['status'] ? 'success' : 'danger' }}">
+                                                {{ $item['status'] ? 'Siap' : 'Belum Lengkap' }}
+                                            </span>
+                                        </div>
+                                        <p class="text-muted mb-3">{{ $item['description'] }}</p>
+                                        <a href="{{ $item['route'] }}" class="btn btn-outline-primary btn-sm">
+                                            {{ $item['action'] }}
+                                        </a>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-folder-open mr-1"></i>
+                            Project Terbaru
+                        </h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Judul</th>
+                                    <th>Kategori</th>
+                                    <th>Tahun</th>
+                                    <th>Dibuat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($recentProjects as $project)
+                                    <tr>
+                                        <td>
+                                            <a href="{{ route('project.edit', $project->id) }}">{{ $project->title }}</a>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-info">{{ $project->category }}</span>
+                                        </td>
+                                        <td>{{ $project->year }}</td>
+                                        <td>{{ $project->created_at?->format('d M Y') }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted py-4">Belum ada project yang tersimpan.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                @canany(['experience', 'video'])
+                    <div class="row">
+                        @can('experience')
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+                                            <i class="fas fa-briefcase mr-1"></i>
+                                            Experience Terbaru
+                                        </h3>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <ul class="list-group list-group-flush">
+                                            @forelse($recentExperiences as $experience)
+                                                <li class="list-group-item">
+                                                    <strong>{{ $experience->position }}</strong>
+                                                    <div>{{ $experience->company_name }}</div>
+                                                    <small class="text-muted">
+                                                        {{ $experience->start_year }} - {{ $experience->is_current ? 'Sekarang' : ($experience->end_year ?: '-') }}
+                                                        @if($experience->location)
+                                                            | {{ $experience->location }}
+                                                        @endif
+                                                    </small>
+                                                </li>
+                                            @empty
+                                                <li class="list-group-item text-muted">Belum ada data pengalaman.</li>
+                                            @endforelse
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        @endcan
+
+                        @can('video')
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+                                            <i class="fas fa-video mr-1"></i>
+                                            Video Terbaru
+                                        </h3>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <ul class="list-group list-group-flush">
+                                            @forelse($recentVideos as $video)
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <strong>{{ $video->title ?: 'Untitled video' }}</strong>
+                                                        <div class="text-muted small">
+                                                            {{ $video->video_url ? 'File video tersedia' : 'File video belum tersedia' }}
+                                                        </div>
+                                                    </div>
+                                                    <a href="{{ route('video.edit', $video->id) }}" class="btn btn-outline-secondary btn-sm">Edit</a>
+                                                </li>
+                                            @empty
+                                                <li class="list-group-item text-muted">Belum ada video yang ditambahkan.</li>
+                                            @endforelse
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        @endcan
+                    </div>
+                @endcanany
             </div>
-          </div>
-          <div class="card-footer">
-            <form action="#" method="post">
-              <div class="input-group">
-                <input type="text" name="message" placeholder="Type Message ..." class="form-control">
-                <span class="input-group-append">
-                  <button type="button" class="btn btn-primary">Send</button>
-                </span>
-              </div>
-            </form>
-          </div>
-        </div>
-      </section>
 
-      <section class="col-lg-5 connectedSortable">
-        <div class="card bg-gradient-primary">
-          <div class="card-header border-0">
-            <h3 class="card-title">
-              <i class="fas fa-map-marker-alt mr-1"></i>
-              Visitors
-            </h3>
-          </div>
-          <div class="card-body">
-            <div id="world-map" style="height: 250px; width: 100%;"></div>
-          </div>
-        </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-bolt mr-1"></i>
+                            Quick Actions
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        @can('hero')
+                            <a href="{{ route('hero.index') }}" class="btn btn-primary btn-block mb-2">Kelola Hero Section</a>
+                        @endcan
+                        @can('about')
+                            <a href="{{ route('about.index') }}" class="btn btn-outline-primary btn-block mb-2">Edit About</a>
+                        @endcan
+                        @can('project')
+                            <a href="{{ route('project.create') }}" class="btn btn-outline-success btn-block mb-2">Tambah Project Baru</a>
+                        @endcan
+                        @can('video')
+                            <a href="{{ route('video.create') }}" class="btn btn-outline-warning btn-block mb-2">Tambah Video Baru</a>
+                        @endcan
+                        @can('contact')
+                            <a href="{{ route('contact.index') }}" class="btn btn-outline-dark btn-block">Atur Contact</a>
+                        @endcan
+                    </div>
+                </div>
 
-        <div class="card bg-gradient-success">
-          <div class="card-header border-0">
-            <h3 class="card-title">
-              <i class="far fa-calendar-alt"></i>
-              Calendar
-            </h3>
-          </div>
-          <div class="card-body pt-0">
-            <div id="calendar" style="width: 100%"></div>
-          </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-user mr-1"></i>
+                            Ringkasan Portfolio
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <dl class="mb-0">
+                            @can('hero')
+                                <dt>Hero Headline</dt>
+                                <dd>{{ $hero?->headline ?: 'Belum ada headline.' }}</dd>
+                            @endcan
+
+                            @can('about')
+                                <dt>About</dt>
+                                <dd>{{ $about?->description ? \Illuminate\Support\Str::limit($about->description, 120) : 'Belum ada deskripsi about.' }}</dd>
+                            @endcan
+
+                            @can('contact')
+                                <dt>Contact Email</dt>
+                                <dd>{{ $contact?->email ?: 'Belum ada email kontak.' }}</dd>
+                            @endcan
+
+                            @can('project')
+                                <dt>Project Data</dt>
+                                <dd>Data project global. Jika diubah oleh akun ini, akun lain yang punya izin Project akan melihat perubahan yang sama.</dd>
+                            @endcan
+                        </dl>
+                    </div>
+                </div>
+
+                @can('project')
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-tags mr-1"></i>
+                            Kategori Project
+                        </h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Kategori</th>
+                                    <th class="text-right">Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($projectCategories as $category)
+                                    <tr>
+                                        <td>{{ $category->category }}</td>
+                                        <td class="text-right">{{ $category->total }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="2" class="text-center text-muted py-4">Belum ada kategori project.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @endcan
+            </div>
         </div>
-      </section>
     </div>
-  </div>
 </section>
-<div style="display: none;">
-    <div id="sparkline-1"></div>
-    <div id="sparkline-2"></div>
-    <div id="sparkline-3"></div>
-
-    <div id="revenue-map"></div>
-
-    <input type="text" class="knob" id="knob-1">
-    <input type="text" class="knob" id="knob-2">
-    <input type="text" class="knob" id="knob-3">
-    <input type="text" class="knob" id="knob-4">
-</div>
+@endcan
 @endsection

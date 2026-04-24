@@ -1,6 +1,9 @@
 <x-guest-layout>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
+    <div class="mb-4 rounded-md border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800">
+        Login menggunakan akun yang sudah disiapkan administrator. Pendaftaran akun umum dinonaktifkan dan hak akses ditentukan berdasarkan role.
+    </div>
 
     <form method="POST" action="{{ route('login') }}">
         @csrf

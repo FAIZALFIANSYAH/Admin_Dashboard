@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+@can('hero')
 <div class="container-fluid pt-4">
     <div class="card">
         <div class="card-header">
@@ -44,4 +45,5 @@
         </form>
     </div>
 </div>
+@endcan
 @endsection

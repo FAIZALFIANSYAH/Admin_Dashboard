@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+@can('tools')
 <div class="container-fluid pt-4">
     <div class="card">
         <div class="card-header"><h3 class="card-title">Tools List</h3></div>
@@ -48,4 +49,5 @@
         </div>
     </div>
 </div>
+@endcan
 @endsection

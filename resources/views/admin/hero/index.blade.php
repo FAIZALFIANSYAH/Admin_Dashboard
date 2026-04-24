@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+@can('hero')
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -58,28 +59,35 @@
                     </tr>
                     <tr>
                         <th style="width: 200px;">Badge</th>
-                        <td>{{ $hero->badge ?? 'Belum ada data' }}</td>
+                        <td>{{ $hero?->badge ?? 'Belum ada data' }}</td>
                     </tr>
                     <tr>
                         <th>Headline</th>
-                        <td>{{ $hero->headline ?? 'Belum ada data' }}</td>
+                        <td>{{ $hero?->headline ?? 'Belum ada data' }}</td>
                     </tr>
                     <tr>
                         <th>Subheadline</th>
-                        <td>{{ $hero->subheadline ?? 'Belum ada data' }}</td>
+                        <td>{{ $hero?->subheadline ?? 'Belum ada data' }}</td>
                     </tr>
                     <tr>
                         <th>CTA Text</th>
-                        <td>{{ $hero->cta_text ?? 'Belum ada data' }}</td>
+                        <td>{{ $hero?->cta_text ?? 'Belum ada data' }}</td>
                     </tr>
                 </table>
 
                 <div class="mt-4">
-                    <a href="{{ route ('hero.edit', $hero->id) }}" class="btn btn-warning">Edit Hero Section</a>
+                    @if($hero)
+                        <a href="{{ route('hero.edit', $hero->id) }}" class="btn btn-warning">Edit Hero Section</a>
+                    @else
+                        <div class="alert alert-warning mb-0">
+                            Data Hero belum tersedia, jadi tombol edit belum bisa digunakan.
+                        </div>
+                    @endif
                 </div>
 
             </div>
         </div>
     </div>
 </section>
+@endcan
 @endsection
